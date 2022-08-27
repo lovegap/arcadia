@@ -2,7 +2,7 @@ import socket,os,colorama, time
 
 user = os.getlogin()
 
-host = "72.167.38.255"
+host = ""
 port = 1337
 ada = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ada.bind((host,port))
