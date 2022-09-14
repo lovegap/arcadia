@@ -1,5 +1,5 @@
 # arcadia
 
-ESO LO DEJE ABANDONADO!!!
+ESTO LO DEJE ABANDONADO!!!
 
 talvez algun dia lo retome, quien sabe.
